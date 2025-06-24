@@ -1,0 +1,63 @@
+<odoo>
+    <template id="report_patient_medical">
+        <t t-call="web.external_layout">
+            <main style="font-family: 'Arial', sans-serif; font-size: 13px; color: #333;">
+                <t t-foreach="docs" t-as="doc">
+                    <div class="page" style="margin-bottom: 40px;">
+
+                        <h2 style="font-size: 24px; color: #1A237E; border-bottom: 2px solid #1A237E; padding-bottom: 8px;">
+                            Medical Patient Report
+                        </h2>
+
+                        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                            <div style="width: 60%; line-height: 1.9;">
+                                <p><strong>Full Name:</strong> <span t-esc="doc.first_name"/> <span t-esc="doc.last_name"/></p>
+                                <p><strong>Age:</strong> <span t-esc="doc.age"/></p>
+                                <p><strong>Department:</strong> <span t-esc="doc.department_id.name"/></p>
+                                <p><strong>Assigned Doctors:</strong>
+                                    <t t-foreach="doc.doctor_ids" t-as="doctor" t-set="last_doctor" t-last="last">
+                                        <span t-esc="doctor.first_name"/> <span t-esc="doctor.last_name"/><t t-if="not last_doctor">, </t>
+                                    </t>
+                                </p>
+                                <p><strong>Email:</strong> <span t-esc="doc.email"/></p>
+                            </div>
+
+                            <div style="width: 35%; text-align: left;">
+                                <t t-if="doc.image">
+                                    <img t-att-src="'data:image/png;base64,%s' % doc.image.decode('utf-8')" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #ccc; margin-bottom: 10px;"/>
+                                </t>
+                                <p><strong>Birth Date:</strong> <span t-esc="doc.birth_date"/></p>
+                                <p><strong>PCR Test:</strong> <span t-esc="doc.pcr"/></p>
+                                <p><strong>Blood Type:</strong> <span t-esc="doc.blood_type"/></p>
+                            </div>
+                        </div>
+
+                        <h3 style="font-size: 18px; color: #0D47A1; margin-top: 40px; border-bottom: 1px solid #0D47A1; padding-bottom: 6px;">
+                            Communication Log
+                        </h3>
+
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px;" border="1">
+                            <thead style="background-color: #E3F2FD;">
+                                <tr>
+                                    <th style="padding: 6px;">User</th>
+                                    <th style="padding: 6px;">Date</th>
+                                    <th style="padding: 6px;">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.message_ids.filtered(lambda m: m.message_type != 'notification')" t-as="msg">
+                                    <tr>
+                                        <td style="padding: 6px;"><span t-esc="msg.author_id.name"/></td>
+                                        <td style="padding: 6px;"><span t-esc="msg.date"/></td>
+                                        <td style="padding: 6px;"><span t-out="msg.body"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </t>
+            </main>
+        </t>
+    </template>
+</odoo>
